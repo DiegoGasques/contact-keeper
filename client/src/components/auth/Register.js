@@ -1,9 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import alertContext from "../../context/alert/alertContext";
+import authContext from "../../context/auth/authContext";
+import { CLEAR_ERRORS } from "../../context/types";
 
-const Register = () => {
-  const { actions } = useContext(alertContext);
+const Register = props => {
+  const AlertContext = useContext(alertContext);
+  const AuthContext = useContext(authContext);
+
+  const { setAlert } = AlertContext.actions;
+  const { register, clearErrors } = AuthContext.actions;
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -12,6 +18,18 @@ const Register = () => {
   });
   const { name, email, password, password2 } = user;
 
+  useEffect(() => {
+    if (AuthContext.isAuthenticated) {
+      props.history.push("/");
+    }
+
+    if (AuthContext.error) {
+      setAlert(AuthContext.error, "danger", 10000);
+      clearErrors();
+    }
+    // eslint-disable-next-line
+  }, [AuthContext.error, AuthContext.isAuthenticated, props.history]);
+
   const handleChange = e =>
     setUser({ ...user, [e.target.name]: e.target.value });
 
@@ -19,11 +37,15 @@ const Register = () => {
     e.preventDefault();
 
     if (name === "" || email === "" || password === "") {
-      actions.setAlert("Please enter all fields", "danger");
+      setAlert("Please enter all fields", "danger");
     } else if (password !== password2) {
-      actions.setAlert("Password confirmation incorrect", "danger");
+      setAlert("Password confirmation incorrect", "danger");
     } else {
-      console.log("Register");
+      register({
+        name,
+        email,
+        password
+      });
     }
   };
 
