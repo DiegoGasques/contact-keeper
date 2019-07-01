@@ -49,6 +49,30 @@ const AuthState = ({ children }) => {
     }
   };
 
+  const login = async formData => {
+    const config = {
+      header: {
+        "Content-Type": "application/json"
+      }
+    };
+
+    try {
+      const res = await axios.post("/api/auth", formData, config);
+
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      });
+
+      loadUser();
+    } catch (e) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: e.response.data.msg
+      });
+    }
+  };
+
   const loadUser = async () => {
     setAuthToken(localStorage.token);
 
@@ -80,7 +104,8 @@ const AuthState = ({ children }) => {
         actions: {
           register,
           clearErrors,
-          loadUser
+          loadUser,
+          login
         }
       }}
     >
