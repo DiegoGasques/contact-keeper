@@ -73,6 +73,8 @@ const AuthState = ({ children }) => {
     }
   };
 
+  const logout = () => dispatch({ type: LOGOUT });
+
   const loadUser = async () => {
     setAuthToken(localStorage.token);
 
@@ -105,7 +107,8 @@ const AuthState = ({ children }) => {
           register,
           clearErrors,
           loadUser,
-          login
+          login,
+          logout
         }
       }}
     >
