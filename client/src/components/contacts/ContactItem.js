@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const ContactItem = ({ contact, deleteContact, setCurrent, clearCurrent }) => {
-  const { id, name, email, phone, type } = contact;
+  const { _id, name, email, phone, type } = contact;
 
   const handleDelete = e => {
-    deleteContact(id);
+    deleteContact(_id);
     clearCurrent();
   };
   const handleEdit = e => setCurrent(contact);
